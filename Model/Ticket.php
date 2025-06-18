@@ -13,8 +13,4 @@ class Ticket extends AbstractExtensibleModel
         $this->_init(ResourceModel::class);
     }
 
-    public function getCustomAttributesCodes()
-    {
-        return array('entity_id', 'parking_zone_id', 'car_plate_number', 'start_time', 'end_time', 'status');
-    }
 }

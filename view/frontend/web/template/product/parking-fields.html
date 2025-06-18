@@ -1,0 +1,20 @@
+<!-- ko if: isVisible() -->
+<div class="parking-ticket-wrapper">
+    <div class="field">
+        <label for="car_number">Car Plate Number</label>
+        <input type="text" id="car_number" name="car_number" data-bind="value: carNumber" />
+    </div>
+    <div class="field">
+        <label for="start_time">Start Time</label>
+        <input type="datetime-local" id="start_time" name="start_time" data-bind="value: startTime" />
+    </div>
+    <div class="field">
+        <label for="end_time">End Time</label>
+        <input type="datetime-local" id="end_time" name="end_time" data-bind="value: endTime" />
+    </div>
+    <div class="field">
+        <label for="zone_id">Parking Zone</label>
+        <select id="zone_id" name="zone_id" data-bind="options: zones, optionsText: 'name', optionsValue: 'id', value: zoneId"></select>
+    </div>
+</div>
+<!-- /ko -->
