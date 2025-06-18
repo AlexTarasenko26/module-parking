@@ -1,0 +1,22 @@
+{
+    "name": "epam/parking",
+    "description": "Add logic for processing parking downloadable products",
+    "require": {
+        "php": "^7.4 || ~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0",
+        "magento/framework": "*",
+        "magento/module-eav": "*"
+    },
+    "type": "magento2-module",
+    "license": [
+        "Proprietary"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Epam\\Parking\\": ""
+        }
+    },
+    "version": "1.0.1"
+}

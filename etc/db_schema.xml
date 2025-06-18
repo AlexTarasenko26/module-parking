@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+
+    <table name="parking_tickets" resource="default" engine="innodb" comment="Parking Ticket Table">
+        <column name="entity_id" xsi:type="int" unsigned="true" nullable="false" identity="true" comment="Ticket ID"/>
+        <column name="order_id" xsi:type="int" unsigned="true" nullable="false" comment="Order ID"/>
+        <column name="parking_zone_id" xsi:type="int" unsigned="true" nullable="false" comment="Parking Zone ID"/>
+        <column name="car_plate_number" xsi:type="varchar" length="20" nullable="false" comment="Car Plate"/>
+        <column name="start_time" xsi:type="timestamp" on_update="false" nullable="false" comment="Start Time"/>
+        <column name="end_time" xsi:type="timestamp" on_update="false" nullable="false" comment="End Time"/>
+        <column name="status" xsi:type="varchar" length="32" nullable="false" comment="Status"/>
+        <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column name="updated_at" xsi:type="timestamp" nullable="false" on_update="true" default="CURRENT_TIMESTAMP" comment="Updated At"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+
+        <constraint xsi:type="foreign" referenceId="PARKING_TICKETS_ORDER_ID_SALES_ORDER_ENTITY_ID"
+                    table="parking_tickets" column="order_id"
+                    referenceTable="sales_order" referenceColumn="entity_id"
+                    onDelete="CASCADE"/>
+
+        <constraint xsi:type="foreign" referenceId="PARKING_TICKETS_ZONE_ID_ENTITY_ID"
+                    table="parking_tickets" column="parking_zone_id"
+                    referenceTable="parking_zones" referenceColumn="entity_id"
+                    onDelete="NO ACTION"/>
+    </table>
+
+    <table name="parking_zones" resource="default" engine="innodb" comment="Parking Zones">
+        <column name="entity_id" xsi:type="int" unsigned="true" nullable="false" identity="true" comment="Zone ID"/>
+        <column name="name" xsi:type="varchar" length="128" nullable="false" comment="Zone Name"/>
+        <column name="location" xsi:type="text" nullable="true" comment="Zone Location"/>
+        <column name="max_capacity" xsi:type="int" unsigned="true" nullable="true" comment="Max Capacity"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+    </table>
+</schema>
