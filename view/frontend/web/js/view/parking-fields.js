@@ -25,10 +25,10 @@ define([
 
             this.config = config || {};
 
-            this.carNumber = ko.observable(this.config.carNumber || '');
-            this.startTime = ko.observable(this.config.startTime || '');
-            this.endTime = ko.observable(this.config.endTime || '');
-            this.zoneId = ko.observable(this.config.zoneId || '');
+            this.carNumber = ko.observable('').extend({ required: true })
+            this.startTime = ko.observable('').extend({ required: true })
+            this.endTime = ko.observable('').extend({ required: true })
+            this.zoneId = ko.observable('').extend({ required: true })
             this.zones = ko.observableArray([]);
 
             if (this.config.isParkingTicket) {

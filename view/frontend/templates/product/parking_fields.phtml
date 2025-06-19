@@ -2,24 +2,20 @@
 /** @var \Magento\Catalog\Block\Product\View $block */
 $product = $block->getProduct();
 if ($product && $product->getData('is_parking_ticket')): ?>
-    <div id="parking-ticket-form" data-bind="scope: 'parkingTicketForm'">
+    <div id="parking-ticket-fields" data-bind="scope: 'parkingTicketForm'">
         <!-- ko template: getTemplate() --><!-- /ko -->
     </div>
 
     <script type="text/x-magento-init">
         {
-            "#parking-ticket-form": {
+            "#parking-ticket-fields": {
                 "Magento_Ui/js/core/app": {
                     "components": {
                         "parkingTicketForm": {
                             "component": "Epam_Parking/js/view/parking-fields",
                             "config": {
-                                "carNumber": "",
-                                "startTime": "",
-                                "endTime": "",
-                                "zoneId": "",
                                 "zonesUrl": "<?= $block->getUrl('parking/zone/index') ?>",
-                                "isParkingTicket": <?= $block->escapeHtml(json_encode((bool) $product->getData('is_parking_ticket'))) ?>
+                                "isParkingTicket": <?= $block->escapeJs((bool) $product->getData('is_parking_ticket')) ? 'true' : 'false' ?>
                             }
                         }
                     }
@@ -28,4 +24,3 @@ if ($product && $product->getData('is_parking_ticket')): ?>
         }
     </script>
 <?php endif; ?>
-

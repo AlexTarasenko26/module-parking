@@ -2,15 +2,15 @@
 <div class="parking-ticket-wrapper">
     <div class="field">
         <label for="car_number">Car Plate Number</label>
-        <input type="text" id="car_number" name="car_number" data-bind="value: carNumber" />
+        <input type="text" id="car_number" name="car_number" data-bind="value: carNumber, attr: { name: 'car_number' }" />
     </div>
     <div class="field">
         <label for="start_time">Start Time</label>
-        <input type="datetime-local" id="start_time" name="start_time" data-bind="value: startTime" />
+        <input type="datetime-local" id="start_time" name="start_time" data-bind="value: startTime, attr: { name: 'start_time' }" />
     </div>
     <div class="field">
         <label for="end_time">End Time</label>
-        <input type="datetime-local" id="end_time" name="end_time" data-bind="value: endTime" />
+        <input type="datetime-local" id="end_time" name="end_time" data-bind="value: endTime, attr: { name: 'end_time' }" />
     </div>
     <div class="field">
         <label for="zone_id">Parking Zone</label>
