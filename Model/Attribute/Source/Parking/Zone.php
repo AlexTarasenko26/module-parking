@@ -15,8 +15,10 @@ class Zone extends AbstractSource
     public function getAllOptions()
     {
         if ($this->_options === null) {
+            $this->_options = [
+                ['label' => __('-- Please Select --'), 'value' => '']
+            ];
             $collection = $this->zoneCollectionFactory->create();
-            $this->_options = [];
 
             foreach ($collection as $zone) {
                 $this->_options[] = [
@@ -27,5 +29,10 @@ class Zone extends AbstractSource
         }
 
         return $this->_options;
+    }
+
+    public function toOptionArray(): array
+    {
+        return $this->getAllOptions();
     }
 }

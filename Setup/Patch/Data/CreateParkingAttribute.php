@@ -8,20 +8,16 @@ use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\Patch\DataPatchInterface;
 use Magento\Catalog\Model\Product;
 use Magento\Eav\Api\AttributeSetRepositoryInterface;
-use Magento\Eav\Api\AttributeSetManagementInterface;
-use Magento\Eav\Api\Data\AttributeSetInterfaceFactory;
-use Magento\Eav\Model\Config;
+use Magento\Eav\Model\Config as EavConfig;
 use Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface;
 
 class CreateParkingAttribute implements DataPatchInterface
 {
     public function __construct(
-        private ModuleDataSetupInterface $moduleDataSetup,
-        private EavSetupFactory $eavSetupFactory,
-        private AttributeSetRepositoryInterface $attributeSetRepository,
-        private AttributeSetManagementInterface $attributeSetManagement,
-        private AttributeSetInterfaceFactory $attributeSetFactory,
-        private Config $eavConfig
+        private readonly ModuleDataSetupInterface $moduleDataSetup,
+        private readonly EavSetupFactory $eavSetupFactory,
+        private readonly AttributeSetRepositoryInterface $attributeSetRepository,
+        private readonly EavConfig $eavConfig
     ) {}
 
     public function apply()
@@ -30,39 +26,63 @@ class CreateParkingAttribute implements DataPatchInterface
 
         $eavSetup = $this->eavSetupFactory->create(['setup' => $this->moduleDataSetup]);
 
-        $entityTypeCode = Product::ENTITY;
-        $entityTypeId = $eavSetup->getEntityTypeId($entityTypeCode);
+        $entityType = Product::ENTITY;
+        $entityTypeId = $eavSetup->getEntityTypeId($entityType);
 
-        // Add attribute
-        $eavSetup->addAttribute(
-            $entityTypeCode,
-            'is_parking_ticket',
-            [
-                'type' => 'int',
-                'label' => 'Is Parking Ticket',
-                'input' => 'boolean',
-                'source' => \Magento\Eav\Model\Entity\Attribute\Source\Boolean::class,
-                'required' => false,
-                'default' => 0,
-                'global' => ScopedAttributeInterface::SCOPE_GLOBAL,
-                'visible' => true,
-                'visible_on_front' => true,
-                'used_in_product_listing' => true,
-                'user_defined' => true,
-                'group' => 'General',
-                'apply_to' => 'virtual',
-            ]
-        );
+        try {
+            $eavSetup->addAttribute(
+                $entityType,
+                'is_parking_ticket',
+                [
+                    'type' => 'int',
+                    'label' => 'Is Parking Ticket',
+                    'input' => 'boolean',
+                    'source' => \Magento\Eav\Model\Entity\Attribute\Source\Boolean::class,
+                    'required' => false,
+                    'default' => 0,
+                    'global' => ScopedAttributeInterface::SCOPE_GLOBAL,
+                    'visible' => true,
+                    'visible_on_front' => false,
+                    'used_in_product_listing' => true,
+                    'user_defined' => true,
+                    'group' => 'General',
+                    'apply_to' => 'virtual',
+                ]
+            );
 
-        // Assign attribute to attribute set and group
-        $defaultAttributeSetId = $eavSetup->getDefaultAttributeSetId($entityTypeId);
-        $attributeSet = $this->attributeSetRepository->get($defaultAttributeSetId);
-        $defaultGroupId = $attributeSet->getDefaultGroupId();
+            $eavSetup->addAttribute(
+                $entityType,
+                'zone_id',
+                [
+                    'type' => 'int',
+                    'label' => 'Parking Zone',
+                    'input' => 'select',
+                    'source' => \Epam\Parking\Model\Attribute\Source\Parking\Zone::class,
+                    'required' => false,
+                    'default' => '',
+                    'global' => ScopedAttributeInterface::SCOPE_GLOBAL,
+                    'visible' => true,
+                    'visible_on_front' => true,
+                    'used_in_product_listing' => true,
+                    'user_defined' => true,
+                    'group' => 'General',
+                    'apply_to' => 'virtual',
+                ]
+            );
 
-        $attribute = $this->eavConfig->getAttribute($entityTypeCode, 'is_parking_ticket');
-        $attribute->setAttributeSetId($defaultAttributeSetId);
-        $attribute->setAttributeGroupId($defaultGroupId);
-        $attribute->save();
+
+            $defaultAttributeSetId = $eavSetup->getDefaultAttributeSetId($entityTypeId);
+            $defaultGroupId = $this->attributeSetRepository->get($defaultAttributeSetId)->getDefaultGroupId();
+
+            foreach (['is_parking_ticket', 'zone_id'] as $attributeCode) {
+                $attribute = $this->eavConfig->getAttribute($entityType, $attributeCode);
+                $attribute->setAttributeSetId($defaultAttributeSetId);
+                $attribute->setAttributeGroupId($defaultGroupId);
+                $attribute->save();
+            }
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+        }
 
         $this->moduleDataSetup->getConnection()->endSetup();
     }

@@ -11,8 +11,6 @@ define([
             carNumber: '',
             startTime: '',
             endTime: '',
-            zoneId: '',
-            zonesUrl: '',
             isParkingTicket: false,
             template: 'Epam_Parking/product/parking-fields'
         },
@@ -28,25 +26,9 @@ define([
             this.carNumber = ko.observable('').extend({ required: true })
             this.startTime = ko.observable('').extend({ required: true })
             this.endTime = ko.observable('').extend({ required: true })
-            this.zoneId = ko.observable('').extend({ required: true })
-            this.zones = ko.observableArray([]);
 
-            if (this.config.isParkingTicket) {
-                this.loadZones();
-            }
 
             return this;
-        },
-
-        loadZones: function () {
-            var self = this;
-            storage.get(this.config.zonesUrl).done(function (data) {
-                self.zones(data);
-            });
-        },
-
-        isVisible: function () {
-            return this.config.isParkingTicket;
         }
     });
 });

@@ -32,14 +32,13 @@ class RemoveParkingAttributes implements DataPatchInterface
 
         $attributes = [
             'car_plate_number',
-            'parking_zone',
+            'zone_id',
             'start_time',
             'end_time',
             'is_parking_ticket'
         ];
 
         foreach ($attributes as $attributeCode) {
-            // Check if attribute exists before attempting removal
             $attributeId = $eavSetup->getAttributeId($entityType, $attributeCode);
             if ($attributeId) {
                 $eavSetup->removeAttribute($entityType, $attributeCode);
